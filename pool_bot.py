@@ -1,8 +1,8 @@
 import mouse_controls
-from pool_globals import *
+from config import *
 import time
 from screen_capture import capture_pool_table_image
-from image_parser import get_balls_positions
+from image_parser import *
 
 def start_practice():
     mouse_controls.set_mouse_position(PRACTICE_X, PRACTICE_Y)
@@ -43,8 +43,10 @@ def run():
     mouse_x, mouse_y = mouse_controls.get_mouse_position()
     screenshot_filepath = capture_pool_table_image()
     print(screenshot_filepath)
-    balls_positions_table = get_balls_positions("pool_screenshots/1437338815.png")
+    balls_positions_table = get_balls_positions(screenshot_filepath)
     balls_positions_screen = map(to_screen_pos, balls_positions_table)
+    white_ball_position_table = get_white_ball_position(screenshot_filepath)
+    print(white_ball_position_table)
     print(balls_positions_table)
     print(balls_positions_screen)
     start_practice()

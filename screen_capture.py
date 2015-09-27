@@ -1,6 +1,6 @@
 import ImageGrab
 import time
-from pool_globals import TABLE_BOX
+from config import TABLE_BOX
 
 __pool_screenshot_format = "pool_screenshots/{0}.png"
 

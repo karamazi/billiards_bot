@@ -3,8 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def get_balls_positions(screnshot):
-    img = cv2.imread(screnshot, 0)
+def get_balls_positions(screenshot_path):
+    img = cv2.imread(screenshot_path, 0)
     circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=30, minRadius=6, maxRadius=20)
     circles = np.uint16(np.around(circles))
     positions = [(x, y) for x, y, radius in circles[0, :]]
@@ -18,12 +18,11 @@ def get_balls_positions(screnshot):
     # cv2.imshow('image', cimg)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-
     return positions
 
 
 def test_tresh():
-    img = cv2.imread("pool_screenshots/1437338815.png")
+    img = cv2.imread("test_screenshots/1437338815.png")
     img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     ret, thresh1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
     ret, thresh2 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
@@ -39,15 +38,23 @@ def test_tresh():
 
     plt.show()
 
-#http://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
-def test_find_white_ball():
-    img = cv2.imread("pool_screenshots/1437338815.png")
+
+# http://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
+def get_white_ball_position(screenshot_path):
+    img = cv2.imread(screenshot_path)
     lower_white = np.array([190, 190, 190])
     upper_white = np.array([255, 255, 255])
     mask = cv2.inRange(img, lower_white, upper_white)
-    cv2.imshow('mask', mask)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    mask = cv2.medianBlur(mask, 5)
+    circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=10, minRadius=5, maxRadius=20)
+    circles = np.uint16(np.around(circles))
+    positions = [(x, y) for x, y, radius in circles[0, :]]
+    # cv2.imshow('mask', mask)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    return positions[0]
+
 
 if __name__ == "__main__":
-    test_find_white_ball()
+    get_white_ball_position("test_screenshots/1437338815.png")
+    get_balls_positions("test_screenshots/1437338815.png")
