@@ -1,0 +1,3 @@
+*.pyc
+.idea/
+.pool_screenshots/*.png
