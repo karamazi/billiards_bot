@@ -26,6 +26,8 @@ A lot of stuff is hardcoded therefore, you need to open [Pool Live Pro on Gamede
 maximized, on your primary screen with 1920x1080 resolution. This sucks if you have only one screen, I know.
 
 `python bot_targeting.py` runs "smart" bot with image detection.
+
+
 `python bot_dummy.py` runs "dumb" bot always targeting middle of the table.
 
 ## Remarks
