@@ -6,9 +6,8 @@ This is a quite successful bot with a 50% win ratio so far!
 - pywin32
 - OpenCV v2
 - As for other, im not quite sure. OpenCV itself requires a lot of stuff, so I'm just listing every pip module I have installed.
-
-
-    $ pip list
+<pre>
+    
     matplotlib (1.3.0)
     numpy (1.7.1)
     PIL (1.1.7)
@@ -20,7 +19,7 @@ This is a quite successful bot with a 50% win ratio so far!
     setuptools (16.0)
     six (1.6.1)
     wheel (0.24.0)
-    
+</pre>
 
 ## Running it
 A lot of stuff is hardcoded therefore, you need to open [Pool Live Pro on Gamedesire](http://www.gamedesire.com/#/?n=100&gg=143)
