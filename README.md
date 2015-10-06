@@ -20,6 +20,7 @@ This is a quite successful bot with a 50% win ratio so far!
     setuptools (16.0)
     six (1.6.1)
     wheel (0.24.0)
+    
 
 ## Running it
 A lot of stuff is hardcoded therefore, you need to open [Pool Live Pro on Gamedesire](http://www.gamedesire.com/#/?n=100&gg=143)
