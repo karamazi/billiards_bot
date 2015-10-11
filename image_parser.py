@@ -2,25 +2,34 @@ import cv2
 import numpy as np
 from config import DEBUG_IMGS
 
-def get_balls_positions(screenshot_path):
-    img = cv2.imread(screenshot_path, 0)
-    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=30, minRadius=5, maxRadius=20)
+
+def _show_debug_img(img, circles=None):
+    if not DEBUG_IMGS:
+        return
+
+    if circles:
+        for x, y, radius in circles[0, :]:
+            cv2.circle(img, (x, y), radius, (0, 255, 0), 1)  # draw the outer circle
+            cv2.circle(img, (x, y), 2, (0, 0, 255), 3)  # draw the center of the circle
+
+    cv2.imshow('image', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+def _get_positions(img, edge_tresh,circle_tresh):
+    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1, 10, param1=edge_tresh, param2=circle_tresh, minRadius=5, maxRadius=20)
     if circles is None:
-        print("Balls not found on screen! Looking for radius=1")
-        circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=30, minRadius=1, maxRadius=20)
+        cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1, 10, param1=edge_tresh, param2=circle_tresh, minRadius=2, maxRadius=20)
     circles = np.uint16(np.around(circles))
     positions = [(x, y) for x, y, radius in circles[0, :]]
-
-    if DEBUG_IMGS:
-        cimg = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-        for x, y, radius in circles[0, :]:
-           cv2.circle(cimg, (x, y), radius, (0, 255, 0), 1)  # draw the outer circle
-           cv2.circle(cimg, (x, y), 2, (0, 0, 255), 3)  # draw the center of the circle
-
-        cv2.imshow('image', cimg)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    _show_debug_img(cv2.cvtColor(img, cv2.COLOR_GRAY2BGR), circles)
     return positions
+
+
+def get_balls_positions(screenshot_path):
+    img = cv2.imread(screenshot_path, 0)
+    return _get_positions(img, edge_tresh=50, circle_tresh=30)
 
 
 # http://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
@@ -30,27 +39,8 @@ def get_white_ball_position(screenshot_path):
     upper_white = np.array([255, 255, 255])
     mask = cv2.inRange(img, lower_white, upper_white)
     mask = cv2.medianBlur(mask, 5)
-    if DEBUG_IMGS:
-        cv2.imshow('mask', mask)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-    circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=10, minRadius=5, maxRadius=20)
-    if circles is None:
-        print("WHITE BALL NOT FOUND ON IMAGE. Looking for radius=1")
-        circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=10, minRadius=1, maxRadius=20)
-    circles = np.uint16(np.around(circles))
-    if DEBUG_IMGS:
-        for x, y, radius in circles[0, :]:
-           cv2.circle(img, (x, y), radius, (0, 255, 0), 1)  # draw the outer circle
-           cv2.circle(img, (x, y), 2, (0, 0, 255), 3)  # draw the center of the circle
-
-        cv2.imshow('image', img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-    positions = [(x, y) for x, y, radius in circles[0, :]]
-    return positions
+    _show_debug_img(mask)
+    return _get_positions(mask, edge_tresh=50, circle_tresh=10)
 
 
 if __name__ == "__main__":
