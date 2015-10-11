@@ -40,8 +40,17 @@ def get_white_ball_position(screenshot_path):
         print("WHITE BALL NOT FOUND ON IMAGE. Looking for radius=1")
         circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 10, param1=50, param2=10, minRadius=1, maxRadius=20)
     circles = np.uint16(np.around(circles))
+    if DEBUG_IMGS:
+        for x, y, radius in circles[0, :]:
+           cv2.circle(img, (x, y), radius, (0, 255, 0), 1)  # draw the outer circle
+           cv2.circle(img, (x, y), 2, (0, 0, 255), 3)  # draw the center of the circle
+
+        cv2.imshow('image', img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
     positions = [(x, y) for x, y, radius in circles[0, :]]
-    return positions[0]
+    return positions
 
 
 if __name__ == "__main__":
